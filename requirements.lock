@@ -66,3 +66,5 @@ tzdata==2024.1
     # via pandas
 websockets==14.1
     # via openai
+python-socks====2.5.3
+    # via versus

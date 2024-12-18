@@ -314,6 +314,7 @@ class AsyncOpenAI(AsyncAPIClient):
         # We provide a `DefaultAsyncHttpxClient` class that you can pass to retain the default values we use for `limits`, `timeout` & `follow_redirects`.
         # See the [httpx documentation](https://www.python-httpx.org/api/#asyncclient) for more details.
         http_client: httpx.AsyncClient | None = None,
+        proxy: str | None = None,
         # Enable or disable schema validation for data returned by the API.
         # When enabled an error APIResponseValidationError is raised
         # if the API responds with invalid data for the expected schema.
@@ -338,6 +339,9 @@ class AsyncOpenAI(AsyncAPIClient):
                 "The api_key client option must be set either by passing api_key to the client or by setting the OPENAI_API_KEY environment variable"
             )
         self.api_key = api_key
+
+        # custom proxy url
+        self.proxy = proxy
 
         if organization is None:
             organization = os.environ.get("OPENAI_ORG_ID")

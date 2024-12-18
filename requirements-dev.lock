@@ -189,3 +189,5 @@ websockets==14.1
     # via openai
 zipp==3.17.0
     # via importlib-metadata
+python-socks====2.5.3
+    # via versus

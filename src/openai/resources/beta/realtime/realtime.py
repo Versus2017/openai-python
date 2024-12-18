@@ -36,6 +36,7 @@ from ....types.beta.realtime.realtime_client_event import RealtimeClientEvent
 from ....types.beta.realtime.realtime_server_event import RealtimeServerEvent
 from ....types.beta.realtime.conversation_item_param import ConversationItemParam
 from ....types.beta.realtime.realtime_client_event_param import RealtimeClientEventParam
+from .proxy_connect import ProxyConnect, Proxy
 
 if TYPE_CHECKING:
     from websockets.sync.client import ClientConnection as WebsocketConnection
@@ -314,10 +315,10 @@ class AsyncRealtimeConnectionManager:
         await connection.close()
         ```
         """
-        try:
-            from websockets.asyncio.client import connect
-        except ImportError as exc:
-            raise OpenAIError("You need to install `openai[realtime]` to use this method") from exc
+        # try:
+        #     from websockets.asyncio.client import connect
+        # except ImportError as exc:
+        #     raise OpenAIError("You need to install `openai[realtime]` to use this method") from exc
 
         url = self._prepare_url().copy_with(
             params={
@@ -329,10 +330,11 @@ class AsyncRealtimeConnectionManager:
         log.debug("Connecting to %s", url)
         if self.__websocket_connection_options:
             log.debug("Connection options: %s", self.__websocket_connection_options)
-
+        proxy = Proxy.from_url(self.__client.proxy)
         self.__connection = AsyncRealtimeConnection(
-            await connect(
+            await ProxyConnect(
                 str(url),
+                proxy=proxy,
                 user_agent_header=self.__client.user_agent,
                 additional_headers=_merge_mappings(
                     {
